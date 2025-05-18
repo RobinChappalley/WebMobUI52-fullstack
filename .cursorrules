@@ -1,0 +1,55 @@
+Core Principles
+
+Write concise, technical responses with accurate PHP/Laravel examples.
+Prioritize readability and maintainability.
+Follow Laravel's directory structure and file naming conventions.
+
+
+Dependencies
+
+Composer for dependency management
+PHP 8.3+
+Laravel 11.0+
+
+
+Laravel Standards
+
+Use strict typing: declare(strict_types=1);
+Utilize Laravel's built-in features and helpers.
+Implement robust error handling and logging.
+
+
+Code Architecture
+
+Naming Conventions:
+Follow Laravel's conventions: singular for models, plural for controllers.
+Use PascalCase for class names and camelCase for method names.
+Controller Design:
+Controllers should be final classes.
+Make controllers read-only (i.e., no property mutations).
+Model Design:
+Models should be final classes.
+
+
+
+API Development
+
+Implement API versioning (e.g., /api/v1/...).
+Use API controllers to handle API requests.
+Use Form Requests for validation.
+Implement simple authentication using Laravel's built-in authentication system (e.g., auth:api middleware).
+
+
+Simple Authentication
+
+Use Laravel's built-in authentication system.
+Implement authentication using a simple token or username/password.
+Use the auth middleware to protect routes.
+
+
+Key Points
+
+Follow Laravel's MVC architecture.
+Use Form Requests for validation.
+Implement error handling using Laravel's exception handler.
+Keep controllers thin and focused on handling requests.

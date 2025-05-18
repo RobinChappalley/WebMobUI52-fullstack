@@ -1,19 +1,24 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\LoanController;
 
-Route::prefix('api/v1/')->group(function () {
-  Route::get('/test', function () {
-    return response()->json(['message' => 'Hello, World from api!']);
-  });
+// Routes publiques
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-  Route::delete('/test', function () {
-    return response()->json(['message' => 'Deleting']);
-  });
-
-  Route::post('/time', function () {
-    $timeClient = request()->input('timeClient', 0);
-    sleep(2); // Simulate a long-running process
-    return response()->json(['timeClient' => $timeClient, 'timeServer' => now()]);
-  });
+// Routes protégées
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    
+    // Articles
+    Route::apiResource('articles', ArticleController::class);
+    
+    // Prêts
+    Route::get('/loans', [LoanController::class, 'index']);
+    Route::post('/loans', [LoanController::class, 'store']);
+    Route::post('/loans/{loan}/return', [LoanController::class, 'return']);
 });

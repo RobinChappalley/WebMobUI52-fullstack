@@ -35,6 +35,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
+import { apiLogin } from '../utils/authApi'
 // Importe ton composable d'auth
 import { useAuth } from '../utils/useAuth'
 

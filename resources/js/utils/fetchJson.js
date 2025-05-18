@@ -19,8 +19,8 @@ export function setDefaultHeaders(headers) {
  * @param {string} url - Base URL to use for all requests
  */
 export function setDefaultBaseUrl(url) {
-  if (url[url.length - 1] === '/') url = url.slice(0, -1);
-  defaultBaseUrl = url;
+      if (url[url.length - 1] === '/') url = url.slice(0, -1);
+    defaultBaseUrl = url;
 }
 
 /**
@@ -35,6 +35,19 @@ export function setDefaultBaseUrl(url) {
  * @param {string|null} [options.baseUrl=null] - Custom base URL for this request
  * @returns {Object} - { request: Promise, abort: Function }
  */
+
+function withAuthHeaders(customHeaders = {}, skipAuth = false) {
+  const headers = { ...defaultHeaders, ...customHeaders };
+  if (!skipAuth) { // flag spécial si tu veux DESACTIVER (login/register)
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      headers['Authorization'] = 'Bearer ' + token;
+    }
+  }
+
+  return headers;
+}
+
 export function fetchJson(options) {
   if (typeof options === 'string') {
     options = { url: options };
@@ -64,7 +77,7 @@ export function fetchJson(options) {
     fullUrl += '?' + queryString;
   }
 
-  const allHeaders = { ...defaultHeaders, ...headers };
+  const allHeaders = withAuthHeaders(headers, skipAuth);
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -111,8 +124,8 @@ export function fetchJson(options) {
       });
   });
 
-  return {
-    request,
-    abort: () => controller.abort('AbortExternally'),
-  };
+  // return {
+  //   request,
+  //   abort: () => controller.abort('AbortExternally'),
+  // };
 }

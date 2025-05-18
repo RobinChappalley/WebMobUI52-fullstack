@@ -1,108 +1,39 @@
 <template>
-  <div class="login">
-    <form @submit.prevent="login" class="login-form">
-      <h2>Connexion</h2>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input 
-          type="email" 
-          id="email" 
-          v-model="email" 
-          required
-          class="form-control"
-        >
-      </div>
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input 
-          type="password" 
-          id="password" 
-          v-model="password" 
-          required
-          class="form-control"
-        >
-      </div>
-      <button type="submit" class="btn">Se connecter</button>
-      <p class="error" v-if="error">{{ error }}</p>
-    </form>
+  <div>
+    <Navbar />
+    <LoginForm :onSubmit="login" :error="error" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
+import Navbar from '@/components/Navbar.vue'
+import LoginForm from '@/components/LoginForm.vue'
+import { useAuth } from '../utils/useAuth'
+import axios from 'axios' // décommente quand api prête
 
-const router = useRouter()
-const email = ref('')
-const password = ref('')
 const error = ref('')
+const { login:setAuthUser } = useAuth()
 
-const login = async () => {
+const login = async (email, password) => {
   try {
-    await axios.post('/api/login', {
-      email: email.value,
-      password: password.value
-    })
-    router.push('/')
+    error.value = ""
+    // ATTENTION: Schéma pour démo, à adapter avec ton vrai backend
+    const response = await axios.post('/api/login', { email, password })
+    localStorage.setItem('user', JSON.stringify(response.data))
+    // Rediriger vers la page d'accueil ou autre
+    router.push('/') 
+    setAuthUser(response.data.user)
+    // Pour test sans backend:
+    // if(email === "demo@demo.fr" && password === "password") {
+    //   localStorage.setItem('user', JSON.stringify({ email }))
+    //   window.location = '/' // Redirige l'utilisateur
+    // } else {
+    //   throw new Error('Identifiants invalides')
+
+    // }
   } catch (err) {
-    error.value = err.response?.data?.message || 'Erreur lors de la connexion'
+    error.value = err.message || 'Erreur lors de la connexion.'
   }
 }
 </script>
-
-<style scoped>
-.login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 60vh;
-}
-
-.login-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 400px;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.btn {
-  width: 100%;
-  background-color: #2c3e50;
-  color: white;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-}
-
-.btn:hover {
-  background-color: #34495e;
-}
-
-.error {
-  color: #e74c3c;
-  margin-top: 1rem;
-  text-align: center;
-}
-</style> 

@@ -1,9 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import HomePage from '../components/HomePage.vue';
-import LoginPage from '../components/LoginPage.vue';
-import RegisterPage from '../components/RegisterPage.vue';
-import ArticlesPage from '../components/ArticlesPage.vue';
-import LendingsPage from '../components/LendingsPage.vue';
+import HomePage from '../pages/HomePage.vue';
+import LoginPage from '../pages/LoginPage.vue';
+import RegisterPage from '../pages/RegisterPage.vue';
+import ArticlesPage from '../pages/ArticlesPage.vue';
+import LendingsPage from '../pages/LendingsPage.vue';
+import Navbar from '../components/Navbar.vue';
 
 const routes = [
     {
@@ -14,7 +15,7 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: LoginPage
+        component:LoginPage
     },
     {
         path: '/register',

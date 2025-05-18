@@ -1,79 +1,82 @@
 <template>
   <div class="min-h-screen bg-gray-100">
     <nav class="bg-white shadow-lg">
-      <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between h-16">
-          <div class="flex">
-            <div class="flex-shrink-0 flex items-center">
-              <router-link to="/" class="text-xl font-bold text-gray-800">
-                Bibliothèque AV
-              </router-link>
-            </div>
-            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <router-link 
-                to="/articles" 
-                class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900"
-              >
-                Articles
-              </router-link>
-              <router-link 
-                to="/lendings" 
-                class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900"
-              >
-                Emprunts
-              </router-link>
-            </div>
-          </div>
-          <div class="flex items-center">
-            <template v-if="isLoggedIn">
-              <button 
-                @click="logout" 
-                class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-              >
-                Déconnexion
-              </button>
-            </template>
-            <template v-else>
-              <router-link 
-                to="/login" 
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Connexion
-              </router-link>
-            </template>
-          </div>
-        </div>
+      <!-- ...menu inchangé... -->
+      <div class="flex items-center">
+        <span v-if="isLoggedIn" class="text-green-700 mr-4 font-semibold">✅ Connecté</span>
+        <button 
+          v-if="isLoggedIn"
+          @click="logout"
+          class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+        >
+          Déconnexion
+        </button>
+        <router-link 
+          v-else
+          to="/login"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+        >
+          Connexion
+        </router-link>
       </div>
+      <!-- ... reste inchangé ... -->
     </nav>
-
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <router-view></router-view>
+      <router-view :on-login="login" :on-logout="logout"></router-view>
     </main>
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { watch } from 'vue'
+
+
 export default {
-  computed: {
-    isLoggedIn() {
-      return !!localStorage.getItem('user');
+  setup() {
+    const isLoggedIn = ref(false)
+    const router = useRouter()
+
+    // Vérifier la présence d'un user ou token en localStorage
+    const checkLoginStatus = () => {
+      isLoggedIn.value = !!localStorage.getItem('user')
     }
-  },
-  methods: {
-    logout() {
-      // Force la déconnexion côté frontend
-      localStorage.removeItem('user');
-      this.$router.push('/login');
+
+    // Appelée lors du login réussi (ex: après succès Axios depuis Login.vue)
+    const login = () => {
+      isLoggedIn.value = true
+      localStorage.setItem('user', 'true')
+      console.log(localStorage.getItem('user'))
+      
+      // (Optionnel) Redirige vers home après login
+      router.push('/')
+    }
+
+    // Déconnexion propre
+    const logout = () => {
+      localStorage.removeItem('user')
+      isLoggedIn.value = false
+      router.push('/login')
+    }
+
+    onMounted(() => {
+      checkLoginStatus()
+    })
+
+
+watch(isLoggedIn, (val) => {
+  console.log('isLoggedIn changed:', val)
+})
+
+    return {
+      isLoggedIn, login, logout
     }
   }
 }
 </script>
 
 <style>
-.app {
-  min-height: 100vh;
-  background-color: #f5f5f5;
-}
 
 .navbar {
   background-color: #2c3e50;

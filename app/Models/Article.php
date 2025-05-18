@@ -9,24 +9,35 @@ class Article extends Model
 {
     use HasFactory;
 
+    // Les colonnes qui peuvent être assignées en masse (mass assignment)
     protected $fillable = [
-        'title',
+        'name',
         'type',
-        'description',
-        'is_available'
+        'brand',
+        'state',
+        'description'
     ];
+
 
     protected $casts = [
-        'is_available' => 'boolean'
+        'state' => 'string', // ou tu peux le virer, car enum string
     ];
 
+    /**
+     * Un article peut avoir plusieurs prêts (loans)
+     */
     public function loans()
     {
         return $this->hasMany(Loan::class);
     }
 
+    /**
+     * Le prêt en cours (non rendu)
+     * - Retourne le premier prêt où "returned_at" est null, ou null s'il n'y en a pas
+     */
     public function currentLoan()
     {
-        return $this->loans()->whereNull('returned_at')->first();
+        return $this->hasOne(Loan::class)->whereNull('returned_at');
+        // on retourne la relation, pas l'objet, pour pouvoir l'utiliser avec "with"
     }
-} 
+}

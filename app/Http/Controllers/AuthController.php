@@ -46,10 +46,12 @@ class AuthController extends Controller
                 'email' => ['Les identifiants fournis sont incorrects.'],
             ]);
         }
-
+        $user = Auth::user();
+        $token = $user->createToken('api-token')->plainTextToken;
         return response()->json([
             'message' => 'Connexion réussie',
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'token' => $token
         ]);
     }
 

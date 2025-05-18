@@ -11,11 +11,12 @@
   
   <script setup>
   import Navbar from '@/components/Navbar.vue'
+  import { useAuth } from '../utils/useAuth'
   import RegisterForm from '@/components/RegisterForm.vue'
   import { useRouter } from 'vue-router'
   
   const router = useRouter()
-  
+  const { login:setAuthUser } = useAuth()
   async function registerUser(form, setError) {
     try {
       const csrfToken = document.querySelector('meta[name="csrf-token"]')
@@ -33,6 +34,7 @@
       const data = await response.json()
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(data.user))
+        setAuthUser(data.user)
         router.push('/')
       } else {
         if (data.errors) {

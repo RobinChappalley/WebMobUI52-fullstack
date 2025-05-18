@@ -34,6 +34,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import Navbar from '../components/Navbar.vue'
 
 const lendings = ref([])
 

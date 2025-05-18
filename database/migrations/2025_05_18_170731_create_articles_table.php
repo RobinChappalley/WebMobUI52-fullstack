@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
+            $table->string('name'); // nom de l'article
+            $table->string('type'); // caméra, objectif, lumière, micro, etc.
+            $table->string('brand')->nullable(); // marque (optionnel)
+            $table->enum('state', ['disponible', 'emprunté'])->default('disponible');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('articles');

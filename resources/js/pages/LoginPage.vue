@@ -69,6 +69,8 @@ async function handleLogin() {
     }
     // Stocke le token et l'utilisateur
     localStorage.setItem('auth_token', data.token)
+
+    console.log(data)
     setAuthenticatedUser(data.user)
     router.push('/') // Redirige vers la page d’accueil
   } catch (e) {

@@ -77,7 +77,7 @@ export function fetchJson(options) {
     fullUrl += '?' + queryString;
   }
 
-  const allHeaders = withAuthHeaders(headers, skipAuth);
+  const allHeaders = withAuthHeaders(headers, skipAuth = true);
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);

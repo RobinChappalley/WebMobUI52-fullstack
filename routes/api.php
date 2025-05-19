@@ -15,7 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     
     // Articles
-    Route::apiResource('articles', ArticleController::class);
+    Route::apiResource('/articles', ArticleController::class);
     
     // Prêts
     Route::get('/loans', [LoanController::class, 'index']);

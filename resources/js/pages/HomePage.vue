@@ -2,7 +2,7 @@
   <div>
     <Navbar />
     <section class="container mx-auto text-center pt-16">
-      <h1 class="text-4xl font-bold mb-4">Bienvenue dans la Librairie</h1>
+      <h1 class="text-4xl font-bold mb-4">Bienvenue dans Carten</h1>
       <p class="text-gray-600 mb-6">
         Découvrez et empruntez des articles en un clic !
       </p>
